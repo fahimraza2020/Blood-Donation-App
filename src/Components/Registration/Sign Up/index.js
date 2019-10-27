@@ -27,7 +27,7 @@ class SignUp extends Component {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ firstName: firstName, lastName: lastName, email: email, password: password, bloodGroup: selected })
+            body: JSON.stringify({ firstName, lastName, email, password, bloodGroup: selected })
         })
             .then((res) => res.json())
             .then(() => { this.setState({ firstName: '', lastName: '', email: '', password: '', selected: "Blood Group" }) })

@@ -24,6 +24,7 @@ class Post extends Component {
             selected: 'Blood Group',
             contact: '',
             userData: '',
+            tokens: []
         }
     }
 
@@ -32,34 +33,60 @@ class Post extends Component {
     }
 
     post() {
-        const { urgency, units, country, states, city, hospital, relation, selected, contact } = this.state
-        if (urgency !== null && units !== null && country !== null && states !== null && city !== null && hospital !== null && relation !== null && selected !== null && contact !== null) {
-            fetch("http://192.168.0.102:3010/posts/addPosts", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    units, urgency, country, states, city, hospital, relation, bloodGroup: selected, contact, email: userData.email, name: userData.name
+        fetch("http://192.168.0.102:3010/tokens/getAll")
+            .then((res) => res.json())
+            .then((data) => {
+                this.setState({ tokens: data })
+            })
+        // const { urgency, units, country, states, city, hospital, relation, selected, contact } = this.state
+        // if (urgency !== null && units !== null && country !== null && states !== null && city !== null && hospital !== null && relation !== null && selected !== null && contact !== null) {
+        // fetch("http://192.168.0.102:3010/posts/addPosts", {
+        //     method: "POST",
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         units, urgency, country, states, city, hospital, relation, bloodGroup: selected, contact, uid: userData.uid, name: userData.name
+        //     })
+        // })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'accept-encoding': 'gzip, deflate',
+                'host': 'exp.host'
+            },
+            body: JSON.stringify({
+                to: "ExponentPushToken[m2B5sEBCOn3okLN6Lq6530]",
+                title: 'New Notification',
+                body: 'The notification worked!',
+                priority: "high",
+                sound: "default",
+                channelId: "default",
+            }),
+        }).then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    units: '',
+                    urgency: 'Urgent',
+                    country: 'Country',
+                    states: 'State',
+                    city: "City",
+                    hospital: "Hospital",
+                    relation: "Relation With Patient",
+                    selected: 'Blood Group',
+                    contact: '',
+                    data
                 })
             })
-                .then((res) => res.json())
-                .then(() => {
-                    this.setState({
-                        units: '',
-                        urgency: 'Urgent',
-                        country: 'Country',
-                        states: 'State',
-                        city: "City",
-                        hospital: "Hospital",
-                        relation: "Relation With Patient",
-                        selected: 'Blood Group',
-                        contact: '',
-                    })
-                })
-        } else {
-            console.log("Something is Empty! Please full out all the fields.")
-        }
+            .catch((error) => { console.log(error) })
+        // })
+        // } else {
+        //     console.log("Something is Empty! Please full out all the fields.")
+        // }
     }
 
     render() {
@@ -91,7 +118,7 @@ class Post extends Component {
                                             value={this.state.units}
                                             onChangeText={(e) => { this.setState({ units: e }) }}
                                             keyboardType='numeric'
-                                            maxLength={3}
+                                            maxLength={1}
                                         />
                                     </View>
                                     <View style={{ flex: 1, flexDirection: 'row' }}>

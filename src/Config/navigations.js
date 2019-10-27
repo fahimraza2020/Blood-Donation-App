@@ -42,6 +42,34 @@ const TabNavigator = createMaterialTopTabNavigator(
 const TabNavigatorMain = createStackNavigator({
     Post: {
         screen: TabNavigator,
+        navigationOptions: {
+            header: null
+        },
+    },
+});
+
+const AppNavigator = createDrawerNavigator({
+    Home: {
+        screen: TabNavigatorMain
+    },
+    "Post Blood Request": {
+        screen: Routes.Post
+    },
+    "My Requests": {
+        screen: Routes.Requests
+    },
+    Detailed: {
+        screen: Routes.Detailed,
+        navigationOptions: {
+            drawerLabel: () => null
+        }
+    }
+}, {});
+
+
+const DrawerNavigatorMain = createStackNavigator({
+    Post: {
+        screen: AppNavigator,
         navigationOptions: (navigation) => {
             return {
                 title: 'Blood Donation App',
@@ -58,29 +86,13 @@ const TabNavigatorMain = createStackNavigator({
     },
 });
 
-const AppNavigator = createDrawerNavigator({
-    Home: {
-        screen: TabNavigatorMain
-    },
-    "Post Blood Request": {
-        screen: Routes.Post
-    },
-    "My Requests": {
-        screen: Routes.Requests
-    },
-}, {});
-
-
 const MainNavigator = createSwitchNavigator({
     Auth: {
         screen: AuthNavigator
     },
     App: {
-        screen: AppNavigator,
+        screen: DrawerNavigatorMain,
     },
-    Detailed: {
-        screen: Routes.Detailed
-    }
 });
 
 export default createAppContainer(MainNavigator);

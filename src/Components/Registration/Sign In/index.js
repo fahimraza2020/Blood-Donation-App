@@ -5,6 +5,8 @@ import { Entypo, FontAwesome } from '@expo/vector-icons';
 import { Button } from 'native-base';
 import { getData } from '../../Registered/Post/index'
 import { getDataForMain } from '../../Registered/Main/index'
+import { getDataForMine } from '../../Registered/Post Details/index'
+import { Notifications } from 'expo';
 
 class SignIn extends Component {
     constructor() {
@@ -19,21 +21,24 @@ class SignIn extends Component {
         header: null
     }
 
-
-    logIn() {
+    async logIn() {
         const { email, password } = this.state
+        token = await Notifications.getExpoPushTokenAsync();
         fetch("http://192.168.0.102:3010/users/login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password, token })
         })
             .then((res) => res.json())
             .then((data) => {
-                getData(data)
-                getDataForMain(data)
-                this.props.navigation.navigate("App")
+                if (!!data.uid) {
+                    getData(data)
+                    getDataForMain(data)
+                    getDataForMine(data)
+                    this.props.navigation.navigate("App")
+                }
             })
     }
 
